@@ -1,8 +1,5 @@
-// /api/createNoteBook
-
 import { db } from "@/lib/db";
 import { $notes } from "@/lib/db/schema";
-import { generateImage, generateImagePrompt } from "@/lib/openai";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
@@ -14,18 +11,10 @@ export async function POST(req: Request) {
     return new NextResponse("unauthorised", { status: 401 });
   }
   const body = await req.json();
-  const { name } = body;
-  const image_description = await generateImagePrompt(name);
-  if (!image_description) {
-    return new NextResponse("failed to generate image description", {
-      status: 500,
-    });
-  }
-  const image_url = await generateImage(image_description);
-  if (!image_url) {
-    return new NextResponse("failed to generate image ", {
-      status: 500,
-    });
+  const { name, imageUrl } = body;
+
+  if (!imageUrl) {
+    return new NextResponse("Image URL is required", { status: 400 });
   }
 
   const note_ids = await db
@@ -33,7 +22,7 @@ export async function POST(req: Request) {
     .values({
       name,
       userId,
-      imageUrl: image_url,
+      imageUrl:imageUrl,
     })
     .returning({
       insertedId: $notes.id,

@@ -20,6 +20,7 @@ type Props = {};
 const CreateNoteDialog = (props: Props) => {
   const router = useRouter();
   const [input, setInput] = React.useState("");
+  const [imageUrl, setImageUrl] = React.useState("");
   const uploadToFirebase = useMutation({
     mutationFn: async (noteId: string) => {
       const response = await axios.post("/api/uploadToFirebase", {
@@ -32,6 +33,7 @@ const CreateNoteDialog = (props: Props) => {
     mutationFn: async () => {
       const response = await axios.post("/api/createNoteBook", {
         name: input,
+        imageUrl: imageUrl,
       });
       return response.data;
     },
@@ -71,7 +73,7 @@ const CreateNoteDialog = (props: Props) => {
         <DialogHeader>
           <DialogTitle>New Note Book</DialogTitle>
           <DialogDescription>
-            You can create a new note by clicking the button below.
+            You can create a new note by filling out the form below.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -79,6 +81,12 @@ const CreateNoteDialog = (props: Props) => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Name..."
+          />
+          <div className="h-4"></div>
+          <Input
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            placeholder="Image URL..."
           />
           <div className="h-4"></div>
           <div className="flex items-center gap-2">
