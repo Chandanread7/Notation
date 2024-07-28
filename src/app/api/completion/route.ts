@@ -11,6 +11,7 @@ const openai = new OpenAIApi(config);
 export async function POST(req: Request) {
   // extract the prompt from the body
   const { prompt } = await req.json();
+  
 
   const response = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",

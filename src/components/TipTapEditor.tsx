@@ -18,7 +18,7 @@ const TipTapEditor = ({ note }: Props) => {
     note.editorState || `<h1>${note.name}</h1>`
   );
   const { complete, completion } = useCompletion({
-    api: "/api/completion",
+    api: "/api/completionGoogle",
   });
   const saveNote = useMutation({
     mutationFn: async () => {
@@ -41,7 +41,7 @@ const TipTapEditor = ({ note }: Props) => {
       };
     },
   });
-
+  
   const editor = useEditor({
     autofocus: true,
     extensions: [StarterKit, customText],
@@ -51,8 +51,11 @@ const TipTapEditor = ({ note }: Props) => {
     },
   });
   const lastCompletion = React.useRef("");
-
+  // React.useEffect(()=>{
+  //   console.log('here',completion);
+  // },[completion]);
   React.useEffect(() => {
+    // console.log("Here",completion)
     if (!completion || !editor) return;
     const diff = completion.slice(lastCompletion.current.length);
     lastCompletion.current = completion;
